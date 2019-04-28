@@ -312,10 +312,10 @@ def river_action(screen_area, hand_value, combination_value, stack, action, oppo
             else:
                 keyboard.press('k')
             session_log.update_action_log_session('value_bet', str(screen_area), db)
-        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
-                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
-            keyboard.press('q')
-            session_log.update_action_log_session('push', str(screen_area), db)
+        # elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
+        #         and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
+        #     keyboard.press('q')
+        #     session_log.update_action_log_session('push', str(screen_area), db)
         elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
@@ -333,11 +333,11 @@ def river_action(screen_area, hand_value, combination_value, stack, action, oppo
                 hand) is False and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
-                and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
-            keyboard.press('q')
+        # elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
+        #         and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
+        #     keyboard.press('q')
             session_log.update_action_log_session('push', str(screen_area), db)
-        elif opponent_reaction in ('1', '2',) and (hand_value == 'middle_pair' or hand_value.find('middle_pair') != -1):
+        elif opponent_reaction in ('1', '2',) and (hand_value == 'middle_pair' or hand_value == 'low_two_pairs' or hand_value.find('middle_pair') != -1):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
         else:
