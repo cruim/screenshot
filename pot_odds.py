@@ -48,7 +48,6 @@ def check_is_call_after_opponent_river_agression(screen_area, hand_value, stack_
             call_size = int(call_size)
         if action == 'river_cbet' and cur_stack > bank_size and call_size not in ('0.5', '1', '2', '3', '4') \
                 and hand_value in ('low_two_pairs', 'two_pairs', 'top_pair', 'low_top_pair'):
-            print(hand_value)
             return False
         elif action == 'river_cbet' and cur_stack > bank_size and call_size in ('0.5', '1', '2', '3', '4') \
                 and hand_value in ('low_two_pairs', 'two_pairs', 'top_pair', 'low_top_pair'):

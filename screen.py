@@ -3,6 +3,7 @@ import time
 import datetime
 import math
 import postgresql
+import requests
 import image_processing
 import session_log
 import mouse
@@ -10,6 +11,7 @@ import introduction
 import bar as metka
 import postflop
 import db_query
+import remote_control
 
 IMAGES_FOLDER = "images/"
 FOLDER_NAME = IMAGES_FOLDER + str(datetime.datetime.now().date())
@@ -20,6 +22,7 @@ STACK_COLLECTION = db_query.get_stack_images(DB)
 
 
 def start():
+    remote_control.get_app_state()
     for item in SCREEN_DATA:
         mouse.move_mouse(item['x_mouse'], item['y_mouse'])
         if metka.search_bar(item['screen_area'], DB):
@@ -31,7 +34,8 @@ def start():
                 image_processing.imaging(item['x_coordinate'], item['y_coordinate'], item['width'], item['height'],
                                          image_path, item['screen_area'], DB)
                 hand = image_processing.search_cards(item['screen_area'], DECK, 4, DB)
-                introduction.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name, FOLDER_NAME, DB)
+                introduction.check_conditions_before_insert(hand, item['screen_area'], STACK_COLLECTION, image_name,
+                                                            FOLDER_NAME, DB)
                 introduction.get_decision(item['screen_area'], DB)
             elif last_row_action in ('open', 'call', 'check'):
                 introduction.action_after_open(item['x_coordinate'], item['y_coordinate'], item['width'],
@@ -57,5 +61,4 @@ def start():
                 if image_processing.check_current_hand(item['screen_area'], hand[0]['hand'], DB):
                     introduction.get_decision(str(item['screen_area']), DB)
                 else:
-                    print('else-end')
                     session_log.update_action_log_session('end', str(item['screen_area']), DB)
