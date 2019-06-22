@@ -2,12 +2,15 @@ import postgresql
 import pyaudio
 import wave
 import db_query
+import requests
 
 
 def error_log(module_name, error_message):
     db = postgresql.open(db_query.connection_string())
     insert = db.prepare("insert into error_log (module_name, error_message) values($1,$2)")
     insert(module_name, str(error_message))
+    data = ({'error_message': error_message})
+    requests.post(url='http://cru.im/errorlog', json=data)
     play_alarm_sound()
 
 
