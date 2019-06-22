@@ -7,3 +7,7 @@ def double_space():
 
 def press(key):
     pyautogui.press(key)
+
+
+def hotkey(key1, key2):
+    pyautogui.hotkey(key1, key2)
