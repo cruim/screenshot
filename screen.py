@@ -19,10 +19,13 @@ DB = postgresql.open(db_query.connection_string())
 SCREEN_DATA = db_query.get_screen_data(DB)
 DECK = db_query.get_cards(DB)
 STACK_COLLECTION = db_query.get_stack_images(DB)
+APP_STATE = False
 
 
 def start():
-    remote_control.get_app_state()
+    global APP_STATE
+    if not APP_STATE:
+        APP_STATE = remote_control.get_app_state()
     for item in SCREEN_DATA:
         mouse.move_mouse(item['x_mouse'], item['y_mouse'])
         if metka.search_bar(item['screen_area'], DB):

@@ -17,7 +17,7 @@ def check_is_turn(screen_area, deck, stack_collection, db):
             session_log.update_hand_after_turn(str(screen_area), turn, db)
         last_row = session_log.get_last_row_from_log_session(screen_area, db)
         hand = last_row[0][0]
-        stack = last_row[0][1]
+        stack = current_stack.get_actual_game_data(screen_area, stack_collection, db)
         if make_turn_decision(screen_area, hand, stack, stack_collection, db):
             return True
     return False
@@ -59,8 +59,8 @@ def check_is_river(screen_area, deck, stack_collection, db):
             session_log.update_hand_after_turn(str(screen_area), river, db)
         last_row = session_log.get_last_row_from_log_session(screen_area, db)
         hand = last_row[0][0]
-        stack = last_row[0][1]
         action = last_row[0][3]
+        stack = current_stack.get_actual_game_data(screen_area, stack_collection, db)
         if make_river_decision(screen_area, hand, stack, action, stack_collection, db):
             return True
     return False
@@ -196,6 +196,9 @@ def turn_action(screen_area, hand_value, combination_value, stack, opponent_reac
         elif opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
+        elif stack <= 10 and current_stack.search_bank_stack(screen_area, db) > 10:
+            keyboard.press('q')
+            session_log.update_action_log_session('push', str(screen_area), db)
         else:
             keyboard.press('f')
             session_log.update_action_log_session('fold', str(screen_area), db)
@@ -312,19 +315,9 @@ def river_action(screen_area, hand_value, combination_value, stack, action, oppo
             else:
                 keyboard.press('k')
             session_log.update_action_log_session('value_bet', str(screen_area), db)
-        # elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
-        #         and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
-        #     keyboard.press('q')
-        #     session_log.update_action_log_session('push', str(screen_area), db)
-        elif hand_value == 'weak_flush' and opponent_reaction in ('1', '2', '3'):
-            keyboard.press('c')
-            session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        elif combination_value == 'middle_pair':
+        else:
             keyboard.press('h')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        else:
-            keyboard.press('f')
-            session_log.update_action_log_session('fold', str(screen_area), db)
     else:
         if combination_value == 'premium' or hand_value == 'weak_top_pair':
             keyboard.press('v')
@@ -333,10 +326,6 @@ def river_action(screen_area, hand_value, combination_value, stack, action, oppo
                 hand) is False and opponent_reaction in ('1', '2', '3'):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
-        # elif int(stack) <= 10 and hand_value in ('middle_pair', 'low_two_pairs', 'second_pair') \
-        #         and current_stack.search_current_stack(screen_area, stack_collection, db) <= 10:
-        #     keyboard.press('q')
-            session_log.update_action_log_session('push', str(screen_area), db)
         elif opponent_reaction in ('1', '2',) and (hand_value == 'middle_pair' or hand_value == 'low_two_pairs' or hand_value.find('middle_pair') != -1):
             keyboard.press('c')
             session_log.update_action_log_session('cc_postflop', str(screen_area), db)
